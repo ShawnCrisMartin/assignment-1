@@ -1,3 +1,7 @@
+using System;
+using System.Collections.Generic;
+
+namespace DungeonExplorer
 {
     class Game
     {
@@ -81,3 +85,18 @@
                 }
             }
         }
+
+        private void MoveToNextRoom()
+        {
+            if (currentRoomIndex < rooms.Count - 1)
+            {
+                currentRoomIndex++;
+                Console.WriteLine("You move to the next room...");
+                ShowRoomDetails();
+            }
+            else
+            {
+                Console.WriteLine("There are no more rooms infront");
+            }
+        }
+    }
