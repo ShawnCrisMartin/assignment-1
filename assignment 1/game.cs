@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Numerics;
 
 namespace DungeonExplorer
 {
@@ -11,36 +12,55 @@ namespace DungeonExplorer
 
         public Game()
         {
+            // Prompt the player for their name
             Console.Write("Enter your name: ");
-            string name = Console.ReadLine();
+            string name = Console.ReadLine()?.Trim();
+
+            // Prevent empty input by assigning a default name
+            if (string.IsNullOrEmpty(name))
+                name = "Adventurer";
+
+            // Create a player object with the given name and default health
             player = new Player(name, 100);
 
-            // creatig list of items with room and object in it
+            // Initializing a list of rooms, each with a description and an item
             rooms = new List<Room>
             {
-                new Room("You are in a underground fight club", "boxing gloves"),
+                new Room("You are in an underground fight club", "boxing gloves"),
                 new Room("You are in a spiritual room", "elephant tusk"),
                 new Room("You are in a creepy dungeon", "large egg"),
-                new Room("You are in a underground cave", "treasure box"),
-                new Room("You entering a scary room", "ancient scribe"),
+                new Room("You are in an underground cave", "treasure box"),
+                new Room("You are entering a scary room", "ancient scribe"),
                 new Room("You are in a creepy dungeon", "block of ice"),
-                new Room("You are in a hunters den", "tiger skin"),
-                new Room("You are in a ghost assylum", "wet towel"),
-                new Room("You entering wepons locker", "dagger"),
-                new Room("You just opened gun collection", "M416"),
-                new Room("You entering wepons locker", "Glock19")
+                new Room("You are in a hunter's den", "tiger skin"),
+                new Room("You are in a ghost asylum", "wet towel"),
+                new Room("You are entering a weapons locker", "dagger"),
+                new Room("You just opened a gun collection", "M416"),
+                new Room("You are entering a weapons locker", "Glock19")
             };
 
-            currentRoomIndex = 0; // assigning 0 so that reading starts from first room
+            // Start at the first room
+            currentRoomIndex = 0;
             ShowRoomDetails();
         }
 
         private void ShowRoomDetails()
         {
-            Console.WriteLine(rooms[currentRoomIndex].GetDescription());
-            if (rooms[currentRoomIndex].GetItem() != null)
+            try
             {
-                Console.WriteLine("You see a " + rooms[currentRoomIndex].GetItem());
+                // Display the room description
+                Console.WriteLine(rooms[currentRoomIndex].GetDescription());
+
+                // If there is an item in the room, display it
+                string item = rooms[currentRoomIndex].GetItem();
+                if (!string.IsNullOrEmpty(item))
+                {
+                    Console.WriteLine("You see a " + item);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error displaying room: " + ex.Message);
             }
         }
 
@@ -50,39 +70,54 @@ namespace DungeonExplorer
 
             while (playing)
             {
-
+                // Ask the player for their next action
                 Console.Write("\nWhat do you want to do? (move/pickup/status/quit): ");
-                string command = Console.ReadLine().ToLower();
+                string command = Console.ReadLine()?.Trim().ToLower();
 
-                if (command == "pickup")
+                // Handling player commands using a switch case
+                switch (command)
                 {
-                    if (rooms[currentRoomIndex].GetItem() != null)
-                    {
-                        player.PickUpItem(rooms[currentRoomIndex].GetItem());
-                        rooms[currentRoomIndex].RemoveItem();
-                    }
-                    else
-                    {
-                        Console.WriteLine("there is nothing there to pick up");
-                    }
+                    case "pickup":
+                        TryPickUpItem();
+                        break;
+                    case "move":
+                        MoveToNextRoom();
+                        break;
+                    case "status":
+                        player.ShowStatus();
+                        break;
+                    case "quit":
+                        Console.WriteLine("Goodbye!");
+                        playing = false;
+                        break;
+                    default:
+                        Console.WriteLine("Invalid command.");
+                        break;
                 }
-                else if (command == "move")
+            }
+        }
+
+        private void TryPickUpItem()
+        {
+            try
+            {
+                // Get the item from the current room
+                string item = rooms[currentRoomIndex].GetItem();
+
+                // If there is an item, pick it up; otherwise, notify the player
+                if (!string.IsNullOrEmpty(item))
                 {
-                    MoveToNextRoom();
-                }
-                else if (command == "status")
-                {
-                    player.ShowStatus();
-                }
-                else if (command == "quit")
-                {
-                    Console.WriteLine("Goodbye!");
-                    playing = false;
+                    player.PickUpItem(item);
+                    rooms[currentRoomIndex].RemoveItem();
                 }
                 else
                 {
-                    Console.WriteLine("Invalid command.");
+                    Console.WriteLine("There is nothing here to pick up.");
                 }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Unexpected error: " + ex.Message);
             }
         }
 
@@ -96,7 +131,7 @@ namespace DungeonExplorer
             }
             else
             {
-                Console.WriteLine("There are no more rooms infront");
+                Console.WriteLine("There are no more rooms ahead.");
             }
         }
     }
