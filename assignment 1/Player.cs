@@ -1,8 +1,10 @@
 class Player
+
+    // sotring players name and health
 {
     public string Name { get; private set; }
     public int Health { get; private set; }
-    private List<string> inventory = new List<string>();
+    private List<string> inventory = new List<string>(); // List to store collected items
 
     //defining the variable name and health
     public Player(string name, int health)
@@ -20,6 +22,8 @@ class Player
             Console.WriteLine("You picked up: " + item);
         }
         catch (Exception ex)
+
+        // Error handling
         {
             Console.WriteLine("Error picking up item: " + ex.Message);
         }
