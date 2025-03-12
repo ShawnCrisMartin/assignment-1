@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ﻿using System;
 using System.Collections.Generic;
 using System.Numerics;
@@ -120,6 +121,14 @@ namespace DungeonExplorer
             {
                 Console.WriteLine("there are no more rooms in front.");
             }
+=======
+    class Program
+    {
+        static void Main()
+        {
+            Game game = new Game();
+            game.Start();
+>>>>>>> afe6c6b9d3cb98c2140f146552053b6a38cf65b5
         }
     }
 
@@ -192,3 +201,4 @@ namespace DungeonExplorer
         }
     }
 }
+
