@@ -35,6 +35,7 @@ namespace DungeonExplorer
             Console.WriteLine("Inventory: " + (inventory.Count > 0 ? string.Join(", ", inventory) : "Empty"));
         }
     }
+}
 
     public class Game
     {
