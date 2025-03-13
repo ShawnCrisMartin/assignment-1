@@ -1,10 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Numerics;
-
 namespace DungeonExplorer
 {
-    class Game
+    public class Game
     {
         private Player player;
         private List<Room> rooms;
@@ -13,18 +9,14 @@ namespace DungeonExplorer
         public Game()
         {
             string name;
-
-            // to Keeping on asking for a name until a valid one is given
             do
             {
                 Console.Write("Enter your name: ");
                 name = Console.ReadLine()?.Trim();
-            } while (string.IsNullOrEmpty(name)); // making sure if name is not empty
+            } while (string.IsNullOrEmpty(name));
 
-            // Create a player object with the name and default health
             player = new Player(name, 100);
 
-            // Initializing a list of rooms, each with descriptin and an item
             rooms = new List<Room>
             {
                 new Room("You are in an underground fight club", "boxing gloves"),
@@ -40,7 +32,6 @@ namespace DungeonExplorer
                 new Room("You are entering a weapons locker", "Glock19")
             };
 
-            // Start at the first room
             currentRoomIndex = 0;
             ShowRoomDetails();
         }
@@ -49,10 +40,7 @@ namespace DungeonExplorer
         {
             try
             {
-                // Display the room description
                 Console.WriteLine(rooms[currentRoomIndex].GetDescription());
-
-                // If there is an item in the room, display it
                 string item = rooms[currentRoomIndex].GetItem();
                 if (!string.IsNullOrEmpty(item))
                 {
@@ -68,14 +56,11 @@ namespace DungeonExplorer
         public void Start()
         {
             bool playing = true;
-
             while (playing)
             {
-                // Ask the player for their next action
                 Console.Write("\nWhat do you want to do? (move/pickup/status/quit): ");
                 string command = Console.ReadLine()?.Trim().ToLower();
 
-                // Handling player commands using a switch case
                 switch (command)
                 {
                     case "pickup":
@@ -102,10 +87,7 @@ namespace DungeonExplorer
         {
             try
             {
-                // Get the item from the current room
                 string item = rooms[currentRoomIndex].GetItem();
-
-                // If there is an item, pick it up; otherwise, notify the player
                 if (!string.IsNullOrEmpty(item))
                 {
                     player.PickUpItem(item);
@@ -136,3 +118,4 @@ namespace DungeonExplorer
             }
         }
     }
+}

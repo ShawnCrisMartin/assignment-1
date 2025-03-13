@@ -1,32 +1,29 @@
-
-class Room
+namespace DungeonExplorer
 {
-    // field to store the room descriptions and the item in it.
-    private string description;
-    private string item;
-
-    // Initializing the room with a description and an item in it
-    public Room(string description, string item)
+    public class Room
     {
-        this.description = description;
-        this.item = item;
-    }
+        private string description;
+        private string item;
 
-    // to get the description of the room
-    public string GetDescription()
-    {
-        return description; // Returns the room's description.
-    }
+        public Room(string description, string item)
+        {
+            this.description = description;
+            this.item = item;
+        }
 
-    // to return and get the item inside the room
-    public string GetItem()
-    {
-        return item;
-    }
+        public string GetDescription()
+        {
+            return description;
+        }
 
-    // to remove the item from the room when player picks it up
-    public void RemoveItem()
-    {
-        item = null;
+        public string GetItem()
+        {
+            return item;
+        }
+
+        public void RemoveItem()
+        {
+            item = null;
+        }
     }
 }
