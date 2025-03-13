@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+
 namespace DungeonExplorer
 {
     public class Player
@@ -32,10 +35,7 @@ namespace DungeonExplorer
             Console.WriteLine("Inventory: " + (inventory.Count > 0 ? string.Join(", ", inventory) : "Empty"));
         }
     }
-}
 
-namespace DungeonExplorer
-{
     public class Game
     {
         private Player player;
@@ -154,26 +154,7 @@ namespace DungeonExplorer
             }
         }
     }
-}
 
-class Program
-{
-    static void Main()
-    {
-        try
-        {
-            Game game = new Game();
-            game.Start();
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine("Error: " + ex.Message);
-        }
-    }
-}
-
-namespace DungeonExplorer
-{
     public class Room
     {
         private string description;
@@ -198,6 +179,23 @@ namespace DungeonExplorer
         public void RemoveItem()
         {
             item = string.Empty; // Use an empty string instead of null
+        }
+    }
+}
+
+// Ensure Program is either inside the namespace or left outside intentionally
+class Program
+{
+    static void Main()
+    {
+        try
+        {
+            Game game = new Game();
+            game.Start();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error: " + ex.Message);
         }
     }
 }
