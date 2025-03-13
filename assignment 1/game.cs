@@ -12,18 +12,19 @@ namespace DungeonExplorer
 
         public Game()
         {
-            // Prompt the player for their name
-            Console.Write("Enter your name: ");
-            string name = Console.ReadLine()?.Trim();
+            string name;
 
-            // Prevent empty input by assigning a default name
-            if (string.IsNullOrEmpty(name))
-                name = "Adventurer";
+            // to Keeping on asking for a name until a valid one is given
+            do
+            {
+                Console.Write("Enter your name: ");
+                name = Console.ReadLine()?.Trim();
+            } while (string.IsNullOrEmpty(name)); // making sure if name is not empty
 
-            // Create a player object with the given name and default health
+            // Create a player object with the name and default health
             player = new Player(name, 100);
 
-            // Initializing a list of rooms, each with a description and an item
+            // Initializing a list of rooms, each with descriptin and an item
             rooms = new List<Room>
             {
                 new Room("You are in an underground fight club", "boxing gloves"),
