@@ -1,20 +1,13 @@
-﻿namespace DungeonExplorer
+﻿public abstract class Character
 {
-    public abstract class Characters
+    // Made protected so that derived classes can access it
+    public string Name { get; set; }
+    protected int Health { get; set; }
+
+    // Constructor to initialize Name and Health
+    public Character(string name, int health)
     {
-        public string CharacterName { get; set; }
-        public int CharacterHealth { get; set; }
-
-        public Characters(string name, int health)
-        {
-            CharacterName = name;
-            CharacterHealth = health;
-        }
-
-        public virtual void DisplayInfo()
-        {
-            Console.WriteLine($"Name: {CharacterName}");
-            Console.WriteLine($"Health: {CharacterHealth}");
-        }
+        Name = name;
+        Health = health;
     }
 }

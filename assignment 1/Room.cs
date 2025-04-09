@@ -1,37 +1,35 @@
-using System;
-
-namespace DungeonExplorer
+public class Room
 {
-    public class Room
+    public string Name { get; set; }
+    public string Description { get; set; }
+    public string Item { get; set; }
+    public Enemy Enemy { get; set; }
+
+    public Room(string name, string description, string item = null, Enemy enemy = null)
     {
-        private string description;
-        private string item;
-        private Enemy enemy;
+        Name = name;
+        Description = description;
+        Item = item;
+        Enemy = enemy;
+    }
 
-        public Room(string description, string item)
-        {
-            this.description = description;
-            this.item = item;
-        }
+    public string GetDescription()
+    {
+        return Description;
+    }
 
-        public string GetDescription()
-        {
-            return description;
-        }
+    public string GetItem()
+    {
+        return Item;
+    }
 
-        public string GetItem()
-        {
-            return item;
-        }
+    public Enemy GetEnemy()
+    {
+        return Enemy;
+    }
 
-        public Enemy GetEnemy()  
-        {
-            return enemy;
-        }
-
-        public void RemoveItem()
-        {
-            item = null;
-        }
+    public void RemoveItem()
+    {
+        Item = null;
     }
 }

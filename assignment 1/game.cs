@@ -18,19 +18,12 @@ namespace DungeonExplorer
             player = new Player(name, 100);
 
             rooms = new List<Room>
-            {
-                new Room("You are in an underground fight club", "boxing gloves"),
-                new Room("You are in a spiritual room", "elephant tusk"),
-                new Room("You are in a creepy dungeon", "large egg"),
-                new Room("You are in an underground cave", "treasure box"),
-                new Room("You are entering a scary room", "ancient scribe"),
-                new Room("You are in a creepy dungeon", "block of ice"),
-                new Room("You are in a hunter's den", "tiger skin"),
-                new Room("You are in a ghost asylum", "wet towel"),
-                new Room("You are entering a weapons locker", "dagger"),
-                new Room("You just opened a gun collection", "M416"),
-                new Room("You are entering a weapons locker", "Glock19")
-            };
+        {
+            new Room("You are in an underground fight club", "A dark, cold room.", "boxing gloves", new Enemy("Goblin", 30, 5)),
+            new Room("You are in a spiritual room", "A calm, serene space.", "elephant tusk", new Enemy("Dragon", 50, 10)),
+            new Room("You are in a creepy dungeon", "It smells damp and musty.", "large egg", new Enemy("Zombie", 40, 8))
+            // Add more rooms as needed...
+        };
 
             currentRoomIndex = 0;
             ShowRoomDetails();
@@ -46,6 +39,7 @@ namespace DungeonExplorer
                 {
                     Console.WriteLine("You see a " + item);
                 }
+
                 Enemy enemy = rooms[currentRoomIndex].GetEnemy();
                 if (enemy != null)
                 {
@@ -63,7 +57,7 @@ namespace DungeonExplorer
             bool playing = true;
             while (playing)
             {
-                Console.Write("\nWhat do you want to do? (move/pickup/status/quit): ");
+                Console.Write("\nWhat do you want to do? (move/pickup/status/fight/quit): ");
                 string command = Console.ReadLine()?.Trim().ToLower();
 
                 switch (command)
@@ -76,6 +70,9 @@ namespace DungeonExplorer
                         break;
                     case "status":
                         player.ShowStatus();
+                        break;
+                    case "fight":
+                        TryFightEnemy();
                         break;
                     case "quit":
                         Console.WriteLine("Goodbye!");
@@ -120,6 +117,24 @@ namespace DungeonExplorer
             else
             {
                 Console.WriteLine("There are no more rooms ahead.");
+            }
+        }
+
+        private void TryFightEnemy()
+        {
+            Enemy enemy = rooms[currentRoomIndex].GetEnemy();
+            if (enemy != null)
+            {
+                player.AttackEnemy(enemy);
+                if (enemy.Health <= 0)
+                {
+                    Console.WriteLine("You defeated the enemy!");
+                    rooms[currentRoomIndex].Enemy = null; // Remove enemy after defeat
+                }
+            }
+            else
+            {
+                Console.WriteLine("There is no enemy here to fight.");
             }
         }
     }
