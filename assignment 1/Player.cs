@@ -1,35 +1,68 @@
+using System;
+using System.Collections.Generic;
+
 namespace DungeonExplorer
 {
-    public class Player
+    public class Player : Characters
     {
-        public string Name { get; private set; }
-        public int Health { get; private set; }
-        private List<string> inventory = new List<string>();
+        private List<string> _inventory;
 
-        public Player(string name, int health)
+        public Player(string name, int health) : base(name, health)
         {
-            Name = name;
-            Health = health;
+            _inventory = new List<string>();
         }
 
         public void PickUpItem(string item)
         {
-            try
+            if (!string.IsNullOrWhiteSpace(item))
             {
-                inventory.Add(item);
-                Console.WriteLine("You picked up: " + item);
+                _inventory.Add(item);
+                Console.WriteLine($"You picked up: {item}");
             }
-            catch (Exception ex)
+            else
             {
-                Console.WriteLine("Error picking up item: " + ex.Message);
+                Console.WriteLine("That item doesn't seem to exist.");
+            }
+        }
+
+        public void ShowInventory()
+        {
+            Console.WriteLine("\n--- Inventory ---");
+
+            if (_inventory.Count == 0)
+            {
+                Console.WriteLine("Your inventory is empty.");
+                return;
+            }
+
+            foreach (var item in _inventory)
+            {
+                Console.WriteLine($"- {item}");
             }
         }
 
         public void ShowStatus()
         {
-            Console.WriteLine($"\nPlayer: {Name}");
-            Console.WriteLine($"Health: {Health}");
-            Console.WriteLine("Inventory: " + (inventory.Count > 0 ? string.Join(", ", inventory) : "Empty"));
+            Console.WriteLine("\n--- Player Status ---");
+            Console.WriteLine($"Name   : {CharacterName}");
+            Console.WriteLine($"Health : {CharacterHealth}");
+            Console.WriteLine("----------------------");
+        }
+
+        public void TakeDamage(int amount)
+        {
+            CharacterHealth -= amount;
+
+            if (CharacterHealth < 0)
+                CharacterHealth = 0;
+
+            Console.WriteLine($"{CharacterName} took {amount} damage! Health is now {CharacterHealth}.");
+        }
+
+        public void Heal(int amount)
+        {
+            CharacterHealth += amount;
+            Console.WriteLine($"{CharacterName} healed for {amount} points. Health is now {CharacterHealth}.");
         }
     }
 }
