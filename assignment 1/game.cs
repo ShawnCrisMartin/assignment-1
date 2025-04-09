@@ -46,6 +46,11 @@ namespace DungeonExplorer
                 {
                     Console.WriteLine("You see a " + item);
                 }
+                Enemy enemy = rooms[currentRoomIndex].GetEnemy();
+                if (enemy != null)
+                {
+                    Console.WriteLine($"You see a dangerous {enemy.Name}!");
+                }
             }
             catch (Exception ex)
             {

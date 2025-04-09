@@ -1,9 +1,12 @@
+using System;
+
 namespace DungeonExplorer
 {
     public class Room
     {
         private string description;
         private string item;
+        private Enemy enemy;
 
         public Room(string description, string item)
         {
@@ -19,6 +22,11 @@ namespace DungeonExplorer
         public string GetItem()
         {
             return item;
+        }
+
+        public Enemy GetEnemy()  
+        {
+            return enemy;
         }
 
         public void RemoveItem()
