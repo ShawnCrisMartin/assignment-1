@@ -1,17 +1,19 @@
-using DungeonExplorer;
-
-class Program
+namespace DungeonExplorer
 {
-    static void Main()
+
+    class Program
     {
-        try
+        static void Main()
         {
-            Game game = new Game();
-            game.Start();
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine("Error: " + ex.Message);
+            try
+            {
+                Game game = new Game();
+                game.Start();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error: " + ex.Message);
+            }
         }
     }
 }

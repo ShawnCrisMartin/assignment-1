@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+
 namespace DungeonExplorer
 {
     public class Game
@@ -18,12 +21,12 @@ namespace DungeonExplorer
             player = new Player(name, 100);
 
             rooms = new List<Room>
-        {
-            new Room("You are in an underground fight club", "A dark, cold room.", "boxing gloves", new Enemy("Goblin", 30, 5)),
-            new Room("You are in a spiritual room", "A calm, serene space.", "elephant tusk", new Enemy("Dragon", 50, 10)),
-            new Room("You are in a creepy dungeon", "It smells damp and musty.", "large egg", new Enemy("Zombie", 40, 8))
-            // Add more rooms as needed...
-        };
+            {
+                new Room("Underground Fight Club", "A dark, cold room.", new Weapon("Boxing Gloves", 15), new Enemy("Goblin", 30, 5, "Boxing Gloves")),
+                new Room("Spiritual Room", "A calm, serene space.", new Weapon("Elephant Tusk", 20), new Enemy("Dragon", 50, 10, "Elephant Tusk")),
+                new Room("Vampire Den", "It reeks of blood and garlic.", new Weapon("Torch", 25), new Enemy("Vampire", 60, 12, "Torch")),
+                new Room("Fortress of Solitude", "Chilly and glowing green.", new Weapon("Kryptonite", 999), new Enemy("Superman", 1000, 100, "Kryptonite"))
+            };
 
             currentRoomIndex = 0;
             ShowRoomDetails();
@@ -33,8 +36,8 @@ namespace DungeonExplorer
         {
             try
             {
-                Console.WriteLine(rooms[currentRoomIndex].GetDescription());
-                string item = rooms[currentRoomIndex].GetItem();
+                Console.WriteLine($"\n{rooms[currentRoomIndex].Name}: {rooms[currentRoomIndex].GetDescription()}");
+                string item = rooms[currentRoomIndex].GetItem()?.Name;
                 if (!string.IsNullOrEmpty(item))
                 {
                     Console.WriteLine("You see a " + item);
@@ -89,8 +92,8 @@ namespace DungeonExplorer
         {
             try
             {
-                string item = rooms[currentRoomIndex].GetItem();
-                if (!string.IsNullOrEmpty(item))
+                Weapon item = rooms[currentRoomIndex].Item;
+                if (item != null)
                 {
                     player.PickUpItem(item);
                     rooms[currentRoomIndex].RemoveItem();
@@ -123,18 +126,44 @@ namespace DungeonExplorer
         private void TryFightEnemy()
         {
             Enemy enemy = rooms[currentRoomIndex].GetEnemy();
-            if (enemy != null)
+            if (enemy == null)
             {
-                player.AttackEnemy(enemy);
-                if (enemy.Health <= 0)
-                {
-                    Console.WriteLine("You defeated the enemy!");
-                    rooms[currentRoomIndex].Enemy = null; // Remove enemy after defeat
-                }
+                Console.WriteLine("There is no enemy here to fight.");
+                return;
+            }
+
+            if (player.Inventory.Count == 0)
+            {
+                Console.WriteLine("You have no weapons! Pick something up first.");
+                return;
+            }
+
+            Console.WriteLine("Choose a weapon to attack with:");
+            for (int i = 0; i < player.Inventory.Count; i++)
+            {
+                Console.WriteLine($"{i + 1}. {player.Inventory[i].Name} (Damage: {player.Inventory[i].BaseDamage})");
+            }
+
+            int choice;
+            while (true)
+            {
+                Console.Write("Enter weapon number: ");
+                if (int.TryParse(Console.ReadLine(), out choice) && choice >= 1 && choice <= player.Inventory.Count)
+                    break;
+                Console.WriteLine("Invalid choice. Try again.");
+            }
+
+            Weapon selectedWeapon = player.Inventory[choice - 1];
+            player.AttackEnemy(enemy, selectedWeapon);
+
+            if (enemy.Health <= 0)
+            {
+                Console.WriteLine($"You defeated the {enemy.Name}!");
+                rooms[currentRoomIndex].Enemy = null;
             }
             else
             {
-                Console.WriteLine("There is no enemy here to fight.");
+                Console.WriteLine($"{enemy.Name} has {enemy.Health} HP left.");
             }
         }
     }

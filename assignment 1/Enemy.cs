@@ -1,22 +1,28 @@
-﻿public class Enemy
+﻿using System;
+namespace DungeonExplorer
 {
-    public string Name { get; set; }
-    public int Health { get; set; }
-    public int Attack { get; set; }
-
-    public Enemy(string name, int health, int attack)
+    public class Enemy
     {
-        Name = name;
-        Health = health;
-        Attack = attack;
-    }
+        public string Name { get; set; }
+        public int Health { get; set; }
+        public int Attack { get; set; }
+        public string Weakness { get; set; }
 
-    public void TakeDamage(int damage)
-    {
-        Health -= damage;
-        if (Health <= 0)
+        public Enemy(string name, int health, int attack, string weakness)
         {
-            Console.WriteLine($"{Name} has been defeated!");
+            Name = name;
+            Health = health;
+            Attack = attack;
+            Weakness = weakness;
+        }
+
+        public void TakeDamage(int damage)
+        {
+            Health -= damage;
+            if (Health < 0)
+            {
+                Health = 0;
+            }
         }
     }
 }
