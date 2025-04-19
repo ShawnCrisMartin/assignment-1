@@ -22,17 +22,17 @@ namespace DungeonExplorer
 
             rooms = new List<Room>
             {
-                new Room("Pirate Room", "Room full of gold", new Weapon("Kryptonite", 15), new Enemy("unknown country army", 10, 10, "misile")),
-                new Room("Demon Hut", "The demon is sleeping", new Weapon("Demon Slaying Sword", 15), new Enemy("demon", 1, 1, "Kryptonite")),
-                new Room("Samurai Camp", "A peaceful place", new Weapon("Samurai Sword", 5), new Enemy("scientist", 10, 10, "chemical bomb")),
-                new Room("Ninja Hideout", "Shadow filled", new Weapon("Nunchucks", 5), new Enemy("Ninjas", 30, 5, "Samurai Sword")),
-                new Room("Electronics Shop", "Busy marketplace", new Weapon("Torch", 5), new Enemy("Superman", 1000, 100, "Kryptonite")),
-                new Room("Spiritual Room", "A calm place", new Weapon("Elephant Tusk", 20), new Enemy("Monk", 50, 10, "Elephant Tusk")),
-                new Room("Vampire Den", "Smelling of blood", new Weapon("Drugs", 5), new Enemy("Vampire", 60, 12, "Torch")),
-                new Room("Metropolis", "Home of Superman", new Weapon("boomerang", 5), new Enemy("Superman", 1000, 100, "Kryptonite")),
-                new Room("Demon Hut 2", "The demon is awake", new Weapon("misile", 5), new Enemy("Demon", 300, 500, "Demon Slaying Sword")),
-                new Room("Underground Prison", "Steel cage", new Weapon("chemical bomb", 5), new Enemy("Goons", 30, 5, "Nunchucks")),
-                new Room("Upstairs Hideout", "Maximum security", new Weapon("gun", 5), new Enemy("Dealers", 30, 5, "Drugs"))
+                new Room("Pirate Room", "Room full of gold", new Weapon("Kryptonite", 15), new Enemy("unknown country army", 10, 10, 10, "misile")),
+                new Room("Demon Hut", "The demon is sleeping", new Weapon("Demon Slaying Sword", 15), new Enemy("demon", 1, 1, 1, "Kryptonite")),
+                new Room("Samurai Camp", "A peaceful place", new Weapon("Samurai Sword", 5), new Enemy("scientist", 10, 10, 10, "chemical bomb")),
+                new Room("Ninja Hideout", "Shadow filled", new Weapon("Nunchucks", 5), new Enemy("Ninjas", 30, 5, 5, "Samurai Sword")),
+                new Room("Electronics Shop", "Busy marketplace", new Weapon("Torch", 5), new Enemy("shopkeeper", 10, 5, 5, "Kryptonite")),
+                new Room("Spiritual Room", "A calm place", new Weapon("Elephant Tusk", 20), new Enemy("Monk", 50, 10, 10, "Elephant Tusk")),
+                new Room("Vampire Den", "Smelling of blood", new Weapon("Drugs", 5), new Enemy("Vampire", 60, 12, 12, "Torch")),
+                new Room("Metropolis", "Home of Superman", new Weapon("boomerang", 5), new Enemy("Superman", 1000, 100, 100, "Kryptonite")),
+                new Room("Demon Hut 2", "The demon is awake", new Weapon("misile", 5), new Enemy("Demon", 300, 500, 500, "Demon Slaying Sword")),
+                new Room("Underground Prison", "Steel cage", new Weapon("chemical bomb", 5), new Enemy("Goons", 30, 5, 5, "Nunchucks")),
+                new Room("Upstairs Hideout", "Maximum security", new Weapon("gun", 5), new Enemy("Dealers", 30, 5, 5, "Drugs"))
             };
 
             currentRoomIndex = 0;
@@ -145,32 +145,49 @@ namespace DungeonExplorer
                 return;
             }
 
-            Console.WriteLine("Choose a weapon to attack with:");
-            for (int i = 0; i < player.Inventory.Count; i++)
+            while (enemy.Health > 0 && player.Health > 0)
             {
-                Console.WriteLine($"{i + 1}. {player.Inventory[i].Name} (Damage: {player.Inventory[i].BaseDamage})");
-            }
+                Console.WriteLine("\nChoose a weapon to attack with:");
+                for (int i = 0; i < player.Inventory.Count; i++)
+                {
+                    Console.WriteLine($"{i + 1}. {player.Inventory[i].Name} (Damage: {player.Inventory[i].BaseDamage})");
+                }
 
-            int choice;
-            while (true)
-            {
-                Console.Write("Enter weapon number: ");
-                if (int.TryParse(Console.ReadLine(), out choice) && choice >= 1 && choice <= player.Inventory.Count)
+                int choice;
+                while (true)
+                {
+                    Console.Write("Enter weapon number (or 0 to flee): ");
+                    if (int.TryParse(Console.ReadLine(), out choice) && choice >= 0 && choice <= player.Inventory.Count)
+                        break;
+                    Console.WriteLine("Invalid choice. Try again.");
+                }
+
+                if (choice == 0)
+                {
+                    Console.WriteLine("You fled from the battle!");
+                    return;
+                }
+
+                Weapon selectedWeapon = player.Inventory[choice - 1];
+                player.AttackEnemy(enemy, selectedWeapon);
+
+                if (enemy.Health <= 0)
+                {
+                    Console.WriteLine($"You defeated the {enemy.Name}!");
+                    rooms[currentRoomIndex].Enemy = null;
                     break;
-                Console.WriteLine("Invalid choice. Try again.");
-            }
+                }
 
-            Weapon selectedWeapon = player.Inventory[choice - 1];
-            player.AttackEnemy(enemy, selectedWeapon);
+                if (player.Health <= 0)
+                {
+                    Console.WriteLine("Game over! You were defeated.");
+                    return;
+                }
 
-            if (enemy.Health <= 0)
-            {
-                Console.WriteLine($"You defeated the {enemy.Name}!");
-                rooms[currentRoomIndex].Enemy = null;
-            }
-            else
-            {
-                Console.WriteLine($"{enemy.Name} has {enemy.Health} HP left.");
+                // Show status after each round
+                Console.WriteLine($"\nAfter battle:");
+                Console.WriteLine($"{player.Name}: {player.Health} HP");
+                Console.WriteLine($"{enemy.Name}: {enemy.Health} HP");
             }
         }
     }

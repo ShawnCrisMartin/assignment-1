@@ -43,40 +43,41 @@ namespace DungeonExplorer
 
         public void AttackEnemy(Enemy enemy, Weapon weapon)
         {
+            // Player's turn
             int damage = weapon.BaseDamage;
 
             if (weapon.Name.Equals(enemy.Weakness, StringComparison.OrdinalIgnoreCase))
             {
-                damage = enemy.Health;
-                Console.WriteLine($"Strong attack! {weapon.Name} was the weakness of {enemy.Name}.");
+                damage = enemy.Health; // Instant kill if using weakness
+                Console.WriteLine($"Critical hit! {weapon.Name} is {enemy.Name}'s weakness!");
             }
             else
             {
-                Console.WriteLine($"{Name} attacks {enemy.Name} with {weapon.Name} and gives {damage} damage.");
+                Console.WriteLine($"{Name} attacks {enemy.Name} with {weapon.Name} for {damage} damage.");
             }
 
             enemy.TakeDamage(damage);
 
-            // Enemy fights back if not dead
-            if (enemy.Health > 0)
-            {
-                Console.WriteLine($"{enemy.Name} fights back and hits you for {enemy.Damage} damage!");
-                Health -= enemy.Damage;
-
-                if (Health <= 0)
-                {
-                    Console.WriteLine("You were defeated by the enemy.");
-                }
-                else
-                {
-                    Console.WriteLine($"Your current health: {Health}");
-                }
-            }
-            else
+            if (enemy.Health <= 0)
             {
                 Console.WriteLine($"{enemy.Name} was defeated!");
+                return;
             }
+
+            // Enemy's turn
+            Console.WriteLine($"{enemy.Name} counterattacks for {enemy.Damage} damage!");
+            TakeDamage1(enemy.Damage);
         }
 
+        public void TakeDamage1(int damage)
+        {
+            Health -= damage;
+            if (Health <= 0)
+            {
+                Health = 0;
+                Console.WriteLine("You have been defeated!");
+            }
+        }
     }
 }
+
