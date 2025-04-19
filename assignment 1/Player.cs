@@ -48,15 +48,35 @@ namespace DungeonExplorer
             if (weapon.Name.Equals(enemy.Weakness, StringComparison.OrdinalIgnoreCase))
             {
                 damage = enemy.Health;
-                Console.WriteLine($"Critical hit! {weapon.Name} is the weakness of {enemy.Name}.");
+                Console.WriteLine($"Strong attack! {weapon.Name} was the weakness of {enemy.Name}.");
             }
             else
             {
-                Console.WriteLine($"{Name} attacks {enemy.Name} with {weapon.Name} for {damage} damage.");
+                Console.WriteLine($"{Name} attacks {enemy.Name} with {weapon.Name} and gives {damage} damage.");
             }
 
             enemy.TakeDamage(damage);
+
+            // Enemy fights back if not dead
+            if (enemy.Health > 0)
+            {
+                Console.WriteLine($"{enemy.Name} fights back and hits you for {enemy.Damage} damage!");
+                Health -= enemy.Damage;
+
+                if (Health <= 0)
+                {
+                    Console.WriteLine("You were defeated by the enemy.");
+                }
+                else
+                {
+                    Console.WriteLine($"Your current health: {Health}");
+                }
+            }
+            else
+            {
+                Console.WriteLine($"{enemy.Name} was defeated!");
+            }
         }
+
     }
 }
-
