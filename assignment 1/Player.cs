@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace DungeonExplorer
 {
@@ -44,30 +43,21 @@ namespace DungeonExplorer
 
         public void AttackEnemy(Enemy enemy, Weapon weapon)
         {
-            // Player's turn
             int damage = weapon.BaseDamage;
-
-            if (weapon.Name.Equals(enemy.Weakness, StringComparison.OrdinalIgnoreCase))
-            {
-                damage = enemy.Health; // Instant kill if using weakness
-                Console.WriteLine($"Critical hit! {weapon.Name} is {enemy.Name}'s weakness!");
-            }
-            else
-            {
-                Console.WriteLine($"{Name} attacks {enemy.Name} with {weapon.Name} for {damage} damage.");
-            }
-
+            Console.WriteLine($"{Name} attacks {enemy.Name} with {weapon.Name} for {damage} damage.");
             enemy.DamageTaken(damage);
 
             if (enemy.Health <= 0)
             {
                 Console.WriteLine($"{enemy.Name} was defeated!");
-                return;
             }
+        }
 
-            // Enemy's turn
-            Console.WriteLine($"{enemy.Name} counterattacks for {enemy.Damage} damage!");
-            DamageTaken(enemy.Damage);
+        public void UseHealthKit()
+        {
+            // Heal the player when using a health kit
+            Health = Math.Min(100, Health + 20); // Example healing value
+            Console.WriteLine($"{Name} used a Health Kit and healed to {Health} HP!");
         }
 
         public void DamageTaken(int damage)
