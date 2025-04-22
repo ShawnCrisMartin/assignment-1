@@ -1,8 +1,8 @@
 ﻿using System;
-using static System.Net.Mime.MediaTypeNames;
+
 namespace DungeonExplorer
 {
-    public class Enemy
+    public class Enemy : IDamage
     {
         public string Name { get; set; }
         public int Health { get; set; }
@@ -19,7 +19,7 @@ namespace DungeonExplorer
             Weakness = weakness;
         }
 
-        public void TakeDamage(int damage)
+        public void DamageTaken(int damage)
         {
             Health -= damage;
             if (Health < 0)

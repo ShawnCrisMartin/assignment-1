@@ -1,9 +1,10 @@
 using System;
 using System.Collections.Generic;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace DungeonExplorer
 {
-    public class Player
+    public class Player : IDamage
     {
         public string Name { get; set; }
         public int Health { get; set; }
@@ -56,7 +57,7 @@ namespace DungeonExplorer
                 Console.WriteLine($"{Name} attacks {enemy.Name} with {weapon.Name} for {damage} damage.");
             }
 
-            enemy.TakeDamage(damage);
+            enemy.DamageTaken(damage);
 
             if (enemy.Health <= 0)
             {
@@ -66,10 +67,10 @@ namespace DungeonExplorer
 
             // Enemy's turn
             Console.WriteLine($"{enemy.Name} counterattacks for {enemy.Damage} damage!");
-            TakeDamage1(enemy.Damage);
+            DamageTaken(enemy.Damage);
         }
 
-        public void TakeDamage1(int damage)
+        public void DamageTaken(int damage)
         {
             Health -= damage;
             if (Health <= 0)
@@ -77,7 +78,10 @@ namespace DungeonExplorer
                 Health = 0;
                 Console.WriteLine("You have been defeated!");
             }
+            else
+            {
+                Console.WriteLine($"Your current health: {Health}");
+            }
         }
     }
 }
-
