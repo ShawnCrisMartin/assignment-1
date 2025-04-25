@@ -2,18 +2,15 @@
 
 namespace DungeonExplorer
 {
-    public class Enemy : IDamage
+    public class Enemy : Character, IDamage
     {
-        public string Name { get; set; }
-        public int Health { get; set; }
         public int Attack { get; set; }
         public int Damage { get; set; }
         public string Weakness { get; set; }
 
         public Enemy(string name, int health, int damage, int attack, string weakness)
+            : base(name, health)
         {
-            Name = name;
-            Health = health;
             Attack = attack;
             Damage = damage;
             Weakness = weakness;
@@ -28,7 +25,6 @@ namespace DungeonExplorer
             }
         }
 
-        // Enemy attacks player
         public void AttackPlayer(Player player)
         {
             player.DamageTaken(Damage);

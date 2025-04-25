@@ -3,18 +3,15 @@ using System.Collections.Generic;
 
 namespace DungeonExplorer
 {
-    public class Player : IDamage
+    public class Player : Character, IDamage
     {
-        public string Name { get; set; }
-        public int Health { get; set; }
         public int Attack { get; set; }
         public List<Weapon> Inventory { get; set; }
 
         public Player(string name, int health)
+            : base(name, health)
         {
-            Name = name;
-            Health = health;
-            Attack = 10; // default
+            Attack = 10;
             Inventory = new List<Weapon>();
         }
 
@@ -55,8 +52,7 @@ namespace DungeonExplorer
 
         public void UseHealthKit()
         {
-            // Heal the player when using a health kit
-            Health = Math.Min(100, Health + 20); // Example healing value
+            Health = Math.Min(100, Health + 20);
             Console.WriteLine($"{Name} used a Health Kit and healed to {Health} HP!");
         }
 
@@ -75,3 +71,4 @@ namespace DungeonExplorer
         }
     }
 }
+
