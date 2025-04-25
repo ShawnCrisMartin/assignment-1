@@ -41,6 +41,14 @@ namespace DungeonExplorer
         public void AttackEnemy(Enemy enemy, Weapon weapon)
         {
             int damage = weapon.BaseDamage;
+
+            // Check if the enemy's weakness matches the weapon
+            if (enemy.Weakness == weapon.Name)
+            {
+                Console.WriteLine($"{enemy.Name} is vulnerable to {weapon.Name}! Critical damage!");
+                damage = 2000; // Double the damage or set to instant death
+            }
+
             Console.WriteLine($"{Name} attacks {enemy.Name} with {weapon.Name} for {damage} damage.");
             enemy.DamageTaken(damage);
 
@@ -49,6 +57,7 @@ namespace DungeonExplorer
                 Console.WriteLine($"{enemy.Name} was defeated!");
             }
         }
+
 
         public void UseHealthKit()
         {
@@ -63,6 +72,7 @@ namespace DungeonExplorer
             {
                 Health = 0;
                 Console.WriteLine("You have been defeated!");
+                Environment.Exit(0);
             }
             else
             {
