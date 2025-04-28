@@ -1,16 +1,19 @@
-﻿using System;
+﻿using DungeonExplorer;
 
-namespace DungeonExplorer
+public class Weapon : ICollectable
 {
-    public class Weapon
-    {
-        public string Name { get; set; }
-        public int BaseDamage { get; set; }
+    public string Name { get; private set; }
+    public int BaseDamage { get; private set; }
 
-        public Weapon(string name, int baseDamage)
-        {
-            Name = name;
-            BaseDamage = baseDamage;
-        }
+    public Weapon(string name, int damage)
+    {
+        Name = name;
+        BaseDamage = damage;
+    }
+
+    public void OnCollect(Player player)
+    {
+        player.PickUpItem(this);
+        Console.WriteLine($"{Name} added to inventory.");
     }
 }

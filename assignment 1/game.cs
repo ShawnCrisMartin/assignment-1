@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using DungeonExplorer;
+
 
 namespace DungeonExplorer
 {
@@ -45,10 +47,11 @@ namespace DungeonExplorer
             try
             {
                 Console.WriteLine($"\n{rooms[currentRoomIndex].Name}: {rooms[currentRoomIndex].GetDescription()}");
-                string item = rooms[currentRoomIndex].GetItem()?.Name;
-                if (!string.IsNullOrEmpty(item))
+
+                ICollectable item = rooms[currentRoomIndex].GetItem();
+                if (item != null)
                 {
-                    Console.WriteLine("You see a " + item);
+                    Console.WriteLine("You see a " + item.Name);
                 }
 
                 Enemy enemy = rooms[currentRoomIndex].GetEnemy();
@@ -62,6 +65,7 @@ namespace DungeonExplorer
                 Console.WriteLine("Error displaying room: " + ex.Message);
             }
         }
+
 
         public void Start()
         {
@@ -100,10 +104,10 @@ namespace DungeonExplorer
         {
             try
             {
-                Weapon item = rooms[currentRoomIndex].Item;
+                ICollectable item = rooms[currentRoomIndex].Item;
                 if (item != null)
                 {
-                    player.PickUpItem(item);
+                    item.OnCollect(player);
                     rooms[currentRoomIndex].RemoveItem();
                 }
                 else
@@ -116,6 +120,8 @@ namespace DungeonExplorer
                 Console.WriteLine("Unexpected error: " + ex.Message);
             }
         }
+
+
 
         private void MoveToNextRoom()
         {

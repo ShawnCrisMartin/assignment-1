@@ -1,14 +1,17 @@
 using System;
+using DungeonExplorer;
+
 namespace DungeonExplorer
+
 {
     public class Room
     {
         public string Name { get; set; }
         public string Description { get; set; }
-        public Weapon Item { get; private set; }
+        public ICollectable Item { get; private set; }
         public Enemy Enemy { get; set; }
 
-        public Room(string name, string description, Weapon item, Enemy enemy)
+        public Room(string name, string description, ICollectable item, Enemy enemy)
         {
             Name = name;
             Description = description;
@@ -16,14 +19,14 @@ namespace DungeonExplorer
             Enemy = enemy;
         }
 
+        public ICollectable GetItem()
+        {
+            return Item;
+        }
+
         public string GetDescription()
         {
             return Description;
-        }
-
-        public Weapon GetItem()
-        {
-            return Item;
         }
 
         public Enemy GetEnemy()
