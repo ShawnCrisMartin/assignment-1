@@ -1,4 +1,5 @@
 ﻿using DungeonExplorer;
+using System;
 
 public class Weapon : ICollectable
 {
@@ -14,6 +15,6 @@ public class Weapon : ICollectable
     public void OnCollect(Player player)
     {
         player.PickUpItem(this);
-        Console.WriteLine($"{Name} added to inventory.");
+        Console.WriteLine(Name + " added to inventory.");
     }
 }

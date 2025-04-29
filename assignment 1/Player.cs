@@ -17,7 +17,7 @@ namespace DungeonExplorer
 
         public void ShowStatus()
         {
-            Console.WriteLine($"{Name} - Health: {Health}, Attack: {Attack}");
+            Console.WriteLine(Name + " - Health: " + Health + ", Attack: " + Attack);
             Console.WriteLine("Inventory:");
             if (Inventory.Count == 0)
             {
@@ -25,9 +25,9 @@ namespace DungeonExplorer
             }
             else
             {
-                foreach (var weapon in Inventory)
+                foreach (Weapon weapon in Inventory)
                 {
-                    Console.WriteLine($"- {weapon.Name} (Damage: {weapon.BaseDamage})");
+                    Console.WriteLine("- " + weapon.Name + " (Damage: " + weapon.BaseDamage + ")");
                 }
             }
         }
@@ -35,39 +35,41 @@ namespace DungeonExplorer
         public void PickUpItem(Weapon weapon)
         {
             Inventory.Add(weapon);
-            Console.WriteLine($"Picked up: {weapon.Name}");
+            Console.WriteLine("Picked up: " + weapon.Name);
         }
 
         public void AttackEnemy(Enemy enemy, Weapon weapon)
         {
             int damage = weapon.BaseDamage;
 
-            // Check if the enemy's weakness matches the weapon
             if (enemy.Weakness == weapon.Name)
             {
-                Console.WriteLine($"{enemy.Name} is vulnerable to {weapon.Name}! Critical damage!");
-                damage = 2000; // Double the damage or set to instant death
+                Console.WriteLine(enemy.Name + " is vulnerable to " + weapon.Name + "! Critical damage!");
+                damage = 2000;
             }
 
-            Console.WriteLine($"{Name} attacks {enemy.Name} with {weapon.Name} for {damage} damage.");
+            Console.WriteLine(Name + " attacks " + enemy.Name + " with " + weapon.Name + " for " + damage + " damage.");
             enemy.DamageTaken(damage);
 
             if (enemy.Health <= 0)
             {
-                Console.WriteLine($"{enemy.Name} was defeated!");
+                Console.WriteLine(enemy.Name + " was defeated!");
             }
         }
 
-
         public void UseHealthKit()
         {
-            Health = Math.Min(100, Health + 20);
-            Console.WriteLine($"{Name} used a Health Kit and healed to {Health} HP!");
+            Health = Health + 20;
+            if (Health > 100)
+            {
+                Health = 100;
+            }
+            Console.WriteLine(Name + " used a Health Kit and healed to " + Health + " HP!");
         }
 
         public void DamageTaken(int damage)
         {
-            Health -= damage;
+            Health = Health - damage;
             if (Health <= 0)
             {
                 Health = 0;
@@ -76,7 +78,7 @@ namespace DungeonExplorer
             }
             else
             {
-                Console.WriteLine($"Your current health: {Health}");
+                Console.WriteLine("Your current health: " + Health);
             }
         }
     }

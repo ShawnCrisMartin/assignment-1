@@ -1,75 +1,66 @@
 ﻿using System;
-using System.Collections.Generic;
 using DungeonExplorer;
-
 
 namespace DungeonExplorer
 {
+    // running the main logic here, this class
     public class Game
     {
-        private Player player;
-        private List<Room> rooms;
-        private int currentRoomIndex;
+        private Player player;         // using to hold the data of the player name,  health, inventory
+        private GameMap map;           // all the rooms, with weapons to pick and the enemies
+        private int currentRoomIndex;  // traking the room player is currently as he moves
 
+        // initializing the game
         public Game()
         {
+            // asking player for name, and also looping till the input is not null
             string name;
             do
             {
                 Console.Write("Enter your name: ");
                 name = Console.ReadLine()?.Trim();
-            } while (string.IsNullOrEmpty(name));
+            } while (string.IsNullOrEmpty(name));  
 
+            // players hp set to 100 points
             player = new Player(name, 100);
 
-            rooms = new List<Room>
-            {
-                new Room("Pirate Room", "Room full of gold", new Weapon("Kryptonite", 15), new Enemy("unknown country army", 10, 10, 10, "missile")),
-                new Room("Demon Hut", "The demon is sleeping", new Weapon("Demon Slaying Sword", 15), new Enemy("demon", 1, 1, 1, "Kryptonite")),
-                new Room("Samurai Camp", "A peaceful place", new Weapon("Samurai Sword", 5), new Enemy("scientist", 10, 10, 10, "chemical bomb")),
-                new Room("Health Kit Room", "Room with health kit", new Weapon("Health Kit", 0), new Enemy("Zombie", 30, 10, 5, "gun")),
-                new Room("Ninja Hideout", "Shadow filled", new Weapon("Nunchucks", 5), new Enemy("Ninjas", 30, 5, 5, "Samurai Sword")),
-                new Room("Electronics Shop", "Busy marketplace", new Weapon("Torch", 5), new Enemy("shopkeeper", 10, 5, 5, "Kryptonite")),
-                new Room("Spiritual Room", "A calm place", new Weapon("Elephant Tusk", 20), new Enemy("Monk", 50, 10, 10, "Elephant Tusk")),
-                new Room("Vampire Den", "Smelling of blood", new Weapon("Drugs", 5), new Enemy("Vampire", 60, 12, 12, "Torch")),
-                new Room("Metropolis", "Home of Superman", new Weapon("Boomerang", 5), new Enemy("Superman", 1000, 100, 100, "Kryptonite")),
-                new Room("Demon Hut 2", "The demon is awake", new Weapon("Missile", 5), new Enemy("Demon", 300, 500, 500, "Demon Slaying Sword")),
-                new Room("Underground Prison", "Steel cage", new Weapon("Chemical Bomb", 5), new Enemy("Goons", 30, 5, 5, "Nunchucks")),
-                new Room("Upstairs Hideout", "Maximum security", new Weapon("Gun", 5), new Enemy("Dealers", 30, 5, 5, "Drugs"))
-            };
+            // rooms called in
+            map = new GameMap();
 
+            // Starting from the first room
             currentRoomIndex = 0;
+
+            //to display the description
             ShowRoomDetails();
         }
 
+        //descrpition of the room
         private void ShowRoomDetails()
         {
-            try
-            {
-                Console.WriteLine($"\n{rooms[currentRoomIndex].Name}: {rooms[currentRoomIndex].GetDescription()}");
+            var room = map.GetRoom(currentRoomIndex);
 
-                ICollectable item = rooms[currentRoomIndex].GetItem();
-                if (item != null)
-                {
-                    Console.WriteLine("You see a " + item.Name);
-                }
-
-                Enemy enemy = rooms[currentRoomIndex].GetEnemy();
-                if (enemy != null)
-                {
-                    Console.WriteLine($"You see a dangerous {enemy.Name}!");
-                }
-            }
-            catch (Exception ex)
+            if (room == null)
             {
-                Console.WriteLine("Error displaying room: " + ex.Message);
+                Console.WriteLine("No room here."); //message when room is null
+                return;
             }
+
+            Console.WriteLine($"\n{room.Name}: {room.GetDescription()}");
+
+            var item = room.GetItem();
+            if (item != null)
+                Console.WriteLine("You see a " + item.Name); //item being displayed when item value is not empty
+
+            var enemy = room.GetEnemy();
+            if (enemy != null)
+                Console.WriteLine($"You see a dangerous {enemy.Name}!"); //enemy being displayed when enemy value is not empty
         }
 
-
+        // Starts the game loop where the player chooses actions until they quit or die
         public void Start()
         {
             bool playing = true;
+
             while (playing)
             {
                 Console.Write("\nWhat do you want to do? (move/pickup/status/fight/quit): ");
@@ -78,21 +69,22 @@ namespace DungeonExplorer
                 switch (command)
                 {
                     case "pickup":
-                        TryPickUpItem();
-                        break;
+                        TryPickUpItem(); break;
+
                     case "move":
-                        MoveToNextRoom();
-                        break;
+                        MoveToNextRoom(); break;
+
                     case "status":
-                        player.ShowStatus();
-                        break;
+                        player.ShowStatus(); break;
+
                     case "fight":
-                        TryFightEnemy();
-                        break;
+                        TryFightEnemy(); break;
+
                     case "quit":
                         Console.WriteLine("Goodbye!");
                         playing = false;
                         break;
+
                     default:
                         Console.WriteLine("Invalid command.");
                         break;
@@ -100,32 +92,27 @@ namespace DungeonExplorer
             }
         }
 
+        // tries to pick up an item from the current room and add it to player's inventory
         private void TryPickUpItem()
         {
-            try
+            var room = map.GetRoom(currentRoomIndex);
+            var item = room.Item;
+
+            if (item != null)
             {
-                ICollectable item = rooms[currentRoomIndex].Item;
-                if (item != null)
-                {
-                    item.OnCollect(player);
-                    rooms[currentRoomIndex].RemoveItem();
-                }
-                else
-                {
-                    Console.WriteLine("There is nothing here to pick up.");
-                }
+                item.OnCollect(player);  // items collection logicc from icollectable interface
+                room.RemoveItem();       // removing it from the room, so that no dupliaction,
             }
-            catch (Exception ex)
+            else
             {
-                Console.WriteLine("Unexpected error: " + ex.Message);
+                Console.WriteLine("There is nothing here to pick up."); //only when empty after already picking up
             }
         }
 
-
-
+        // moving the player to the next room
         private void MoveToNextRoom()
         {
-            if (currentRoomIndex < rooms.Count - 1)
+            if (currentRoomIndex < map.RoomCount - 1)
             {
                 currentRoomIndex++;
                 Console.WriteLine("You move to the next room...");
@@ -137,9 +124,12 @@ namespace DungeonExplorer
             }
         }
 
+        // fighting with the enemy
         private void TryFightEnemy()
         {
-            Enemy enemy = rooms[currentRoomIndex].GetEnemy();
+            var room = map.GetRoom(currentRoomIndex);
+            var enemy = room.GetEnemy();
+
             if (enemy == null)
             {
                 Console.WriteLine("There is no enemy here to fight.");
@@ -152,9 +142,11 @@ namespace DungeonExplorer
                 return;
             }
 
+            // Combat loop, turn based attacks between enemy and player.
             while (enemy.Health > 0 && player.Health > 0)
             {
                 Console.WriteLine("\nChoose a weapon to use:");
+
                 for (int i = 0; i < player.Inventory.Count; i++)
                 {
                     Console.WriteLine($"{i + 1}. {player.Inventory[i].Name} (Damage: {player.Inventory[i].BaseDamage})");
@@ -166,6 +158,7 @@ namespace DungeonExplorer
                     Console.Write("Enter weapon number (or 0 to flee): ");
                     if (int.TryParse(Console.ReadLine(), out choice) && choice >= 0 && choice <= player.Inventory.Count)
                         break;
+
                     Console.WriteLine("Invalid choice. Try again.");
                 }
 
@@ -175,42 +168,39 @@ namespace DungeonExplorer
                     return;
                 }
 
-                Weapon selectedWeapon = player.Inventory[choice - 1];
+                var selectedWeapon = player.Inventory[choice - 1];
 
                 if (selectedWeapon.Name.Equals("Health Kit", StringComparison.OrdinalIgnoreCase))
                 {
-                    // Use health kit to heal player instead of attacking
+                    // Heals player if chosen weapon fo attack is a health kit
                     player.UseHealthKit();
                     Console.WriteLine($"{player.Name} used {selectedWeapon.Name} and healed to {player.Health} health.");
                 }
                 else
                 {
-                    // Player attacks the enemy
+                    // attacking the enemy
                     player.AttackEnemy(enemy, selectedWeapon);
                 }
 
+                // logic when enemy is defeated
                 if (enemy.Health <= 0)
                 {
                     Console.WriteLine($"You defeated the {enemy.Name}!");
-                    rooms[currentRoomIndex].Enemy = null;
+                    room.Enemy = null;
                     break;
                 }
 
-                // Enemy attacks the player if still alive
-                if (enemy.Health > 0)
-                {
-                    // Example: Enemy uses its attack
-                    Console.WriteLine($"\n{enemy.Name} attacks you!");
-                    player.DamageTaken(enemy.Damage);
+                // enemy attacking back
+                Console.WriteLine($"\n{enemy.Name} attacks you!");
+                player.DamageTaken(enemy.Damage);
 
-                    if (player.Health <= 0)
-                    {
-                        Console.WriteLine("Game over! You were defeated.");
-                        return;
-                    }
+                if (player.Health <= 0)
+                {
+                    Console.WriteLine("Game over! You were defeated.");
+                    return;
                 }
 
-                // Show status after each round
+                // after each round of battle, between the enemy and the player, both the players and enemies health is displayed so that the player can decide if they want to use the health kit to heal or not.
                 Console.WriteLine($"\nAfter battle:");
                 Console.WriteLine($"{player.Name}: {player.Health} HP");
                 Console.WriteLine($"{enemy.Name}: {enemy.Health} HP");

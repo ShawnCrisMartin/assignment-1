@@ -28,7 +28,7 @@ namespace DungeonExplorer
         public void AttackPlayer(Player player)
         {
             player.DamageTaken(Damage);
-            Console.WriteLine($"{Name} attacks {player.Name} for {Damage} damage!");
+            Console.WriteLine(Name + " attacks " + player.Name + " for " + Damage + " damage!");
         }
     }
 }
