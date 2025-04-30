@@ -10,17 +10,17 @@ namespace DungeonExplorer
 
     {
 
-        // The name of the room, and description of the room
+        // the name of the room, and description of the room
         public string Name { get; set; }
         public string Description { get; set; }
 
-        // The items the player an collect, defined in the icollectable interface
+        // the items the player an collect, defined in the icollectable interface
         public ICollectable Item { get; private set; }
 
         // the enemy the player has to fight 
         public Enemy Enemy { get; set; }
 
-        // Constructor for the Room class.setting up the room with a name, description, optional item, and enemy.
+        // constructor for the Room class.setting up the room with a name, description, optional item, and enemy.
         public Room(string name, string description, ICollectable item, Enemy enemy)
         {
             Name = name;

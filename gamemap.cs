@@ -3,14 +3,19 @@ using System.Collections.Generic;
 
 namespace DungeonExplorer
 {
+    // The GameMap class manages all the rooms in the game, like a database of all the rooms the player can go to and pick things from also fighting enemies in
     public class GameMap
     {
+        // A private list to hold room objects
         private List<Room> rooms;
 
+      
+        // to populate the gamemap by adding rooms.
         public GameMap()
         {
             rooms = new List<Room>
             {
+                // Each room has a name, description, a weapon which the player can pick up, and an enemy to fight.
                 new Room("Pirate Room", "Room full of gold", new Weapon("Kryptonite", 15), new Enemy("unknown country army", 10, 10, 10, "missile")),
                 new Room("Demon Hut", "The demon is sleeping", new Weapon("Demon Slaying Sword", 15), new Enemy("demon", 1, 1, 1, "Kryptonite")),
                 new Room("Samurai Camp", "A peaceful place", new Weapon("Samurai Sword", 5), new Enemy("scientist", 10, 10, 10, "chemical bomb")),
@@ -26,6 +31,7 @@ namespace DungeonExplorer
             };
         }
 
+        // method to get a room based on its index in the list If the index is valid it will return the room at that position If the index is invalid it will return null.
         public Room GetRoom(int index)
         {
             if (index >= 0 && index < rooms.Count)
@@ -34,6 +40,6 @@ namespace DungeonExplorer
                 return null;
         }
 
-        public int RoomCount => rooms.Count;
+       
     }
 }
