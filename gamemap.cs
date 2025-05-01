@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace DungeonExplorer
 {
@@ -9,7 +10,6 @@ namespace DungeonExplorer
         // A private list to hold room objects
         private List<Room> rooms;
 
-      
         // to populate the gamemap by adding rooms.
         public GameMap()
         {
@@ -31,15 +31,15 @@ namespace DungeonExplorer
             };
         }
 
-        // method to get a room based on its index in the list If the index is valid it will return the room at that position If the index is invalid it will return null.
-        public Room GetRoom(int index)
+
+        public List<Room> GetRooms()
         {
-            if (index >= 0 && index < rooms.Count)
-                return rooms[index];
-            else
-                return null;
+            return rooms;
         }
 
-       
+
+
+
+
     }
 }

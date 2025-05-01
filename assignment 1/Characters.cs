@@ -17,6 +17,7 @@ public abstract class Character : IDamage
     public virtual void DamageTaken(int damage)
     {
         Health -= damage;
-        if (Health < 0) Health = 0;
+        if (Health < 0) 
+            Health = 0;
     }
 }

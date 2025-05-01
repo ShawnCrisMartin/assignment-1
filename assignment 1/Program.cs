@@ -1,3 +1,5 @@
+using DungeonExplorer;
+
 namespace DungeonExplorer
 {
     //entry point to the whole game
@@ -7,6 +9,9 @@ namespace DungeonExplorer
         {
             try
             {
+
+                //running the testing class
+                Testing.RunAll();
                 //new instance of the game
                 Game game = new Game();
 
